@@ -4,7 +4,7 @@
 
 ## 视频内字幕提取
 
-这里是针对内封了硬字幕的视频，字幕已经式画面的一部分。
+这里是针对内封了硬字幕的视频，字幕已经成为了画面的一部分。
 
 思路：简单用 opencv 提取视频内的所有帧，然后用 tesseract 对图片进行 ocr 识别。
 
@@ -20,7 +20,7 @@
 
 ### 0.2 安装 tesseract 软件，下载训练好的语言包
 - tesseract 软件可以用 scoop 安装：
-```
+``` bash
 scoop install tesseract
 ```
 - tesseract 训练好的语言包
@@ -211,7 +211,7 @@ print([k_frames.remove(kf) for kf in k_frames if not kf['text']])
 
 ```
 
-# 6. 格式化字幕
+## 6. 格式化字幕
 
 ``` python
 
