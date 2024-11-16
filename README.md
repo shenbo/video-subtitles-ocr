@@ -1,12 +1,12 @@
 # video-subtitles-ocr
 
-视频字幕提取，基于 opencv 和 tesseract
+视频字幕提取，基于 opencv 和 tesseract 或 paddleocr
 
 ## 视频内字幕提取
 
 这里是针对内封了硬字幕的视频，字幕已经成为了画面的一部分。
 
-思路：简单用 opencv 提取视频内的所有帧，然后用 tesseract 对图片进行 ocr 识别。
+思路：简单用 opencv 提取视频内的所有帧，然后用 tesseract 对图片进行 ocr 识别。也可以使用 paddleocr。
 
 目前的效率较低、准确度也一般，凑合用。
 
@@ -15,7 +15,7 @@
 
 ### 0.1 安装 python 库
   - opencv-python
-  - pytesseract
+  - pytesseract 或 paddleocr
   - scikit-image
 
 ### 0.2 安装 tesseract 软件，下载训练好的语言包
@@ -225,18 +225,23 @@ print([k_frames.remove(kf) for kf in k_frames if not kf['text']])
 
 ``` python
 
-import pytesseract
+from paddleocr import PaddleOCR
 
-config = f'--tessdata-dir "{tessdata_dir}" --psm 7'
+ocr = PaddleOCR(lang='ch')
 
 for idx, kf in enumerate(k_frames):
-    # 识别为字符串
-    ocr_str = pytesseract.image_to_string(kf['frame'], lang=lang, config=config)
-    ocr_str = ocr_str.strip().replace(' ', '')
+    # 识别字符串    
+    result = ocr.ocr(kf['frame'])
+    print(result)
+    for line in result:
+        if line == None: break
+        
+        words = ''
+        for rect, word in line:
+            words += word[0]
+        print(idx, words)
 
-    if ocr_str:
-        k_frames[idx]['text'] = ocr_str
-        print(f"{kf['start']} --> {kf['end']} : {kf['text']}")
+        k_frames[idx]['text'] = words
 
 print([k_frames.remove(kf) for kf in k_frames if not kf['text']])
 

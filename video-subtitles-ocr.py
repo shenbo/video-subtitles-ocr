@@ -137,7 +137,7 @@ for kf in k_frames:
     print(f"{kf['start']} --> {kf['end']} : {kf['text']}")
 
 # %%
-# 5. 识别字幕
+# 5. 识别字幕 pytesseract
 
 import pytesseract
 
