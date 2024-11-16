@@ -14,7 +14,7 @@
 ## 0. 首先需要配置一下
 
 ### 0.1 安装 python 库
-  - python-opencv
+  - opencv-python
   - pytesseract
   - scikit-image
 
@@ -37,6 +37,16 @@ scoop install tesseract
   - 中文： https://raw.githubusercontent.com/tesseract-ocr/tessdata-fast/master/{}.traineddata
   - 英文： https://raw.githubusercontent.com/tesseract-ocr/tessdata-dast/master/{}.traineddata
   - 中括号里是语言的名字：如 `chi_sim`、`eng` 等。
+
+
+### 0.3 现在可以使用 paddleocr，更加方便一点
+
+> ref: https://paddlepaddle.github.io/PaddleOCR/latest/quick_start.html#1-paddlepaddle
+
+``` bash
+pip install paddleocr
+# pip install paddlepaddle
+```
 
 <!-- more -->
 
@@ -190,7 +200,28 @@ for kf in k_frames:
 
 ```
 
-## 5. 识别字幕
+## 5.1 识别字幕 pytesseract
+
+``` python
+
+import pytesseract
+
+config = f'--tessdata-dir "{tessdata_dir}" --psm 7'
+
+for idx, kf in enumerate(k_frames):
+    # 识别为字符串
+    ocr_str = pytesseract.image_to_string(kf['frame'], lang=lang, config=config)
+    ocr_str = ocr_str.strip().replace(' ', '')
+
+    if ocr_str:
+        k_frames[idx]['text'] = ocr_str
+        print(f"{kf['start']} --> {kf['end']} : {kf['text']}")
+
+print([k_frames.remove(kf) for kf in k_frames if not kf['text']])
+
+```
+
+## 5.2 识别字幕 paddleocr
 
 ``` python
 
